@@ -1,10 +1,8 @@
 import requests
 from bs4 import BeautifulSoup as bs
-from anytree import Node, RenderTree
 
 CURRENT_URL = "http://intranet.daiict.ac.in/~daiict_nt01"
-intranet = Node("Lecture");
-LOCATION = [intranet];
+TraversalSequence = [""];
 
 reserved = [
   "Name",
@@ -14,37 +12,41 @@ reserved = [
   "Parent Directory"
 ]
 
-def getURL(locn):
-  url = CURRENT_URL + "/" + "/".join([i.name for i in locn]);
+class Information:
+  def __init__(self, text, href):
+    self.text = text;
+    self.href = href;
+
+def removeBloat(ele):
+  if ele.text in reserved:
+    return False;
+  else:
+    return True;
+
+def getURL(item):
+  url = CURRENT_URL + item;
   resp = requests.get(url);
   html = resp.content;
 
   soup = bs(html, "html.parser");
-  return soup.find_all("a");
+  temp = [Information(i.text, i.get("href")) for i in soup.find_all("a") if removeBloat(i)];
+  temp = list(filter(removeBloat, temp));
+  return temp;
 
+bulkArr = [Information("/Lecture/", "/Lecture/")];
+while len(bulkArr):
+  TraversalSequence = [];
+  for node_dir in bulkArr:
+    if("/" == node_dir.text[-1]):
+      try:
+        dirList = getURL(node_dir.href);
+        for dirInfo in dirList:
+          print(dirInfo.text, dirInfo.href); 
+        output = [Information(node_dir.text + dirInfo.text, node_dir.href + dirInfo.href) for dirInfo in dirList];
+        TraversalSequence = TraversalSequence + output;
+        for j in output:
+          print(j.text)
+      except:
+        pass;
+  bulkArr = TraversalSequence;
 
-def addDIR(dir_names, node):
-  dirList = [];
-  for name in dir_names:
-    if name.string not in reserved:
-      dir_node = Node(str(name.string), parent=node);
-      if "/" == name.string[-1]:
-        isDirExist = True;
-        dirList.append(dir_node);
-
-  return dirList;
-
-
-dirList = addDIR(getURL(LOCATION), intranet);
-
-for dir_node in dirList:
-  LOCATION.append(dir_node);
-  dirList = addDIR(getURL(LOCATION), dir_node);
-  LOCATION.pop();
-  
-"""
-for child in intranet.children:
-  print(child.name);
-"""
-for pre, fill, node in RenderTree(intranet):
-  print("%s%s" % (pre, node.name));
