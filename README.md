@@ -1,6 +1,6 @@
 # Apcan ( Apache + Scanner )
 
-Scans url to find proposed file.
+Tranverses Apache Server File/Folder tree.
 
 **Requirements**
 - requests
