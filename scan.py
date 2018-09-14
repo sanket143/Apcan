@@ -2,7 +2,6 @@ import requests
 from bs4 import BeautifulSoup as bs
 
 CURRENT_URL = "http://intranet.daiict.ac.in/~daiict_nt01"
-TraversalSequence = [""];
 
 reserved = [
   "Name",
@@ -40,12 +39,12 @@ while len(bulkArr):
     if("/" == node_dir.text[-1]):
       try:
         dirList = getURL(node_dir.href);
-        for dirInfo in dirList:
-          print(dirInfo.text, dirInfo.href); 
         output = [Information(node_dir.text + dirInfo.text, node_dir.href + dirInfo.href) for dirInfo in dirList];
         TraversalSequence = TraversalSequence + output;
         for j in output:
           print(j.text)
+      except KeyboardInterrupt:
+        exit();
       except:
         pass;
   bulkArr = TraversalSequence;
