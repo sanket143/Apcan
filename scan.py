@@ -32,20 +32,24 @@ def getURL(item):
   temp = list(filter(removeBloat, temp));
   return temp;
 
-bulkArr = [Information("/Lecture/", "/Lecture/")];
-while len(bulkArr):
-  TraversalSequence = [];
-  for node_dir in bulkArr:
-    if("/" == node_dir.text[-1]):
-      try:
-        dirList = getURL(node_dir.href);
-        output = [Information(node_dir.text + dirInfo.text, node_dir.href + dirInfo.href) for dirInfo in dirList];
-        TraversalSequence = TraversalSequence + output;
-        for j in output:
-          print(j.text)
-      except KeyboardInterrupt:
-        exit();
-      except:
-        pass;
-  bulkArr = TraversalSequence;
+if __name__ == "__main__":
+  search_query = raw_input("Enter Keyword to Search: ");
+
+  bulkArr = [Information("/Lecture/", "/Lecture/")];
+  while len(bulkArr):
+    TraversalSequence = [];
+    for node_dir in bulkArr:
+      if("/" == node_dir.text[-1]):
+        try:
+          dirList = getURL(node_dir.href);
+          output = [Information(node_dir.text + dirInfo.text, node_dir.href + dirInfo.href) for dirInfo in dirList];
+          TraversalSequence = TraversalSequence + output;
+          for j in output:
+            if search_query.lower() in j.text.lower():
+              print(j.text)
+        except KeyboardInterrupt:
+          exit();
+        except:
+          pass;
+    bulkArr = TraversalSequence;
 
