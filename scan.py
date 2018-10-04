@@ -1,7 +1,9 @@
-import requests
-from bs4 import BeautifulSoup as bs
+import requests;
+import platform;
+import re;
+from bs4 import BeautifulSoup as bs;
 
-CURRENT_URL = "http://intranet.daiict.ac.in/~daiict_nt01"
+CURRENT_URL = "http://intranet.daiict.ac.in/~daiict_nt01";
 
 reserved = [
   "Name",
@@ -33,7 +35,16 @@ def getURL(item):
   return temp;
 
 if __name__ == "__main__":
-  search_query = raw_input("Enter Keyword to Search: ");
+
+  # Check Python Version
+  _version = platform.python_version();
+  _version_number = re.match(r'\d', _version).group();
+
+  if(_version_number == "3"):
+    # If Python3
+    search_query = input("Enter Keyword to Search: ");
+  else:
+    search_query = raw_input("Enter Keyword to Search: ");
 
   bulkArr = [Information("/Lecture/", "/Lecture/")];
   while len(bulkArr):
