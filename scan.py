@@ -56,7 +56,7 @@ if __name__ == "__main__":
           output = [Information(node_dir.text + dirInfo.text, node_dir.href + dirInfo.href) for dirInfo in dirList];
           TraversalSequence = TraversalSequence + output;
           for j in output:
-            if search_query.lower() in j.text.lower():
+            if search_query.lower() in j.text.lower().split("/")[-1]:
               print(j.text)
         except KeyboardInterrupt:
           exit();
