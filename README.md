@@ -1,6 +1,6 @@
 # Apcan ( Apache + Scanner )
 
-Tranverses Apache Server File/Folder tree.
+Tranverses DA-IICT Intranet and searches for files with given keyword.
 
 **Requirements**
 - requests
