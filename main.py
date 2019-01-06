@@ -4,7 +4,6 @@ import requests;
 import platform;
 import threading;
 
-from scan import scan;
 from pygame.locals import *;
 from bs4 import BeautifulSoup as bs;
 
