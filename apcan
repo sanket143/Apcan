@@ -1,0 +1,29 @@
+#!/usr/bin/bash
+
+if [ $# == 1 ]; then
+  if [ "$1" == "--gui" ]; then
+    echo "Starting Apcan (GUI)";
+    python3 ~/Programs/Apcan/launch.py
+
+  elif [ "$1" == "--uninstall" ]; then
+    sudo rm /usr/bin/apcan
+    rm -rf ~/Programs/Apcan
+
+  elif [ "$1" == "--help" ]; then
+    echo "Apcan v1.0.0";
+    echo "DISCLAIMER: Works only when connected with DA-Network";
+    echo "";
+    echo "apcan             - to launch Apcan (CLI)";
+    echo "apcan --gui       - to launch Apcan (GUI)";
+    echo "apcan --uninstall - to uninstall Apcan";
+    echo "apcan --help      - to see this help";
+
+  else
+    echo "Invalid Flag $1";
+    echo "Try apcan --help for help";
+    echo "";
+    echo "Report Bugs Here: https://github.com/sanket143/Apcan/issues/new";
+  fi
+else
+  python3 ~/Programs/Apcan/cli.py || python ~/Programs/Apcan/cli.py
+fi
