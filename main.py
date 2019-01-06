@@ -103,7 +103,7 @@ myFont = pygame.font.SysFont("monospace", 15);
 screen = pygame.display.set_mode((1000, 650))
 done = False;
 value = getKeyword(screen);
-thread = threading.Thread(target=scan, args=(value,), kwargs={});
+thread = threading.Thread(target=scan, args=(value,), daemon=True);
 thread.start();
 color = (255, 0, 0)
 fontColor = (0, 255, 0);
