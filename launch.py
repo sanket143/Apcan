@@ -5,18 +5,23 @@ import re;
 import requests;
 import threading;
 
+
 class Information:
   def __init__(self, text, href):
     self.text = text;
     self.href = href;
+
 
 class ScanThread(threading.Thread):
   def __init__(self):
     super(ScanThread, self).__init__();
     self._stop_event = threading.Event();
 
+
 class App:
   def __init__(self, master):
+
+    # Global Arguments
     self.CURRENT_URL = "http://intranet.daiict.ac.in/~daiict_nt01";
     self.reserved = [
       "Name",
@@ -27,8 +32,12 @@ class App:
     ]
     self.SEARCH_LINKS = [];
 
+    # Rendering GUI
     master.title("Apcan");
+    master.wm_title("Apcan");
     master.geometry("670x443");
+
+    # first Frame for input keyword and buttons
     self.firstFrame = Frame(master);
     self.firstFrame.pack();
 
@@ -46,6 +55,7 @@ class App:
     self.quitButton = Button(self.firstFrame, text="Quit", command=self.quit)
     self.quitButton.pack(side=LEFT);
 
+    # logFrame for List of Links
     logFrame = Frame(master);
     logFrame.pack(fill=BOTH, expand=1);
 
@@ -57,12 +67,33 @@ class App:
     self.listbox.pack(fill=BOTH, expand=1);
     yscrollbar.config(command=self.listbox.yview);
 
-    self.statusBar = Label(master, text="Nothing to Search...", bd=1, relief=SUNKEN, anchor=W);
+    # Status Bar
+    self.statusBar = Label(master, text="Done", bd=1, relief=SUNKEN, anchor=W);
     self.statusBar.pack(side=BOTTOM, fill=X);
+
+
+  def search(self):
+    self.keyword = self.keywordEntry.get();
+    self.scanThread = threading.Thread(target=self.fastSearch, daemon=True);
+    self.scanThread.start();
+    self.updateStatus("Searching " + self.keyword + "...");
+
+
+  def updateStatus(self, status):
+    self.statusBar.configure(text=status);   
+
+
+  def addLink(self, link):
+    self.listbox.insert(0, link);
+    self.updateStatus(str(self.listbox.size()) + ": " + link);
+
 
   def quit(self):
     self.firstFrame.quit;
     exit();
+
+
+  #***** Filter Functions ***** 
 
   def removeBloat(self, ele):
     if ele.text in self.reserved:
@@ -70,11 +101,15 @@ class App:
     else:
       return True;
 
+
   def getDirs(self, items):
     if items.text[-1] == "/":
       return True;
     else:
       return False;
+
+
+  #***** Extracts data and creates threads *****
 
   def getData(self, node_dir):
     url = self.CURRENT_URL + node_dir.href;
@@ -91,7 +126,7 @@ class App:
     threading.Thread(target=self.scan, args=(dirs,), daemon=True).start();
 
     for _f in output:
-      # check for dirs
+      # checking for directories
       if "/" == _f.text[-1] and self.keyword.lower() in _f.text.lower().split("/")[-2]:
         self.addLink(self.CURRENT_URL + _f.text);
 
@@ -99,30 +134,19 @@ class App:
         self.addLink(self.CURRENT_URL + _f.text);
 
   def scan(self, node_dirs):
-
     for node_dir in node_dirs:
       try:
         dirList = self.getData(node_dir);
       except:
         print("Error Occured: ", node_dir.text);
 
+
   def fastSearch(self):
     root = Information("/" ,"/");
     self.getData(root);
 
-  def search(self):
-    self.keyword = self.keywordEntry.get();
 
-    self.scanThread = threading.Thread(target=self.fastSearch, daemon=True);
-    self.scanThread.start();
-    self.updateStatus("Searching " + self.keyword + "...");
-
-  def updateStatus(self, status):
-    self.statusBar.configure(text=status);   
-
-  def addLink(self, link):
-    self.listbox.insert(0, link);
-    self.updateStatus(str(self.listbox.size()) + ": " + link);
+#***** Initializing Tkinter *****
 
 root = Tk()
 b = App(root);
