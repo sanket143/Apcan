@@ -1,6 +1,6 @@
 # Apcan ([Wiki](https://github.com/sanket143/MSTC-WoC-Apcan/wiki))
 
-Tranverses DA-IICT Intranet and searches for files/folders with given keyword.
+Traverses DA-IICT Intranet and searches for files/folders with given keyword.
 
 
 File Tree
