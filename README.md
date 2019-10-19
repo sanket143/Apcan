@@ -7,7 +7,6 @@ File Tree
 
 ```
 ./launch.py # Apcan with GUI using Tkinter
-
 ./cli.py # Apcan with Command Line Interface
 ```
 **Requirements**
