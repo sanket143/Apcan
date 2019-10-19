@@ -5,10 +5,10 @@ Traverses DA-IICT Intranet and searches for files/folders with given keyword.
 
 File Tree
 
+```
 ./launch.py # Apcan with GUI using Tkinter
-
 ./cli.py # Apcan with Command Line Interface
-
+```
 **Requirements**
 - requests
 - beautifulsoup4
